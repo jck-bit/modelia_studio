@@ -17,7 +17,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({ style, options, onChange 
         aria-label="Style selection"
       >
         {options.map((option) => (
-          <option key={option} value={option} className="bg-gray-900">
+          <option key={option} value={option} className="bg-white/10 backdrop-blur text-white ">
             {option}
           </option>
         ))}
