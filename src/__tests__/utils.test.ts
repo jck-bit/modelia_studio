@@ -5,7 +5,7 @@ import {
   sleep,
   generateId,
   getBackoffDelay,
-} from './utils';
+} from '../utils';
 
 describe('utils', () => {
   describe('validateImageFile', () => {

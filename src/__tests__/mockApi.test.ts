@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MockAPI } from './mockApi';
+import { MockAPI } from '../mockApi';
 
 // Mock the utils module
-vi.mock('./utils', () => ({
+vi.mock('../utils', () => ({
   sleep: vi.fn(() => Promise.resolve()),
   generateId: vi.fn(() => 'test-id'),
 }));
