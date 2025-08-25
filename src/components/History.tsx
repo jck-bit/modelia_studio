@@ -20,7 +20,7 @@ const History: React.FC<HistoryProps> = ({ history, onRestore }) => {
             className="w-full p-3 bg-white/5 backdrop-blur border border-white/10 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all text-left"
             aria-label={`Restore generation: ${gen.prompt}`}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 cursor-pointer">
               <img
                 src={gen.imageUrl}
                 alt={gen.prompt}

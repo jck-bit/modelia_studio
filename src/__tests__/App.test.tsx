@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import App from './App';
+import App from '../App';
 
 // Mock the modules
-vi.mock('./utils', async () => {
-  const actual = await vi.importActual<typeof import('./utils')>('./utils');
+vi.mock('../utils', async () => {
+  const actual = await vi.importActual<typeof import('../utils')>('../utils');
   return {
     ...actual,
     fileToDataUrl: vi.fn(() => Promise.resolve('data:image/png;base64,test')),
@@ -203,16 +203,18 @@ describe('App', () => {
 
   it('should show loading state during generation', async () => {
     const user = userEvent.setup();
-    const { MockAPI } = await import('./mockApi');
-    const mockGenerate = vi.fn().mockImplementation(() =>
-      new Promise(resolve => setTimeout(() => resolve({ success: true, data: {} }), 100))
+    const { mockApi } = await import('../mockApi');
+    
+    // Override generate to have a delay
+    mockApi.generate = vi.fn().mockImplementation(() =>
+      new Promise(resolve => setTimeout(() => resolve({
+        id: 'test-id',
+        imageUrl: 'data:image/png;base64,test',
+        prompt: 'Test',
+        style: 'Editorial',
+        createdAt: new Date().toISOString(),
+      }), 100))
     );
-
-    vi.mocked(MockAPI).mockImplementation(() => ({
-      generate: mockGenerate,
-      abort: vi.fn(),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as any);
 
     render(<App />);
 
@@ -231,7 +233,7 @@ describe('App', () => {
 
   it('should handle generation errors with retry', async () => {
     const user = userEvent.setup();
-    const { mockApi } = await import('./mockApi');
+    const { mockApi } = await import('../mockApi');
 
     // Override generate to fail first two times, then succeed
     let callCount = 0;
@@ -393,9 +395,16 @@ describe('App', () => {
   it('should handle abort functionality', async () => {
     const user = userEvent.setup();
     // Get the mocked instance from our module mock
-    const { mockApi } = await import('./mockApi');
+    const { mockApi } = await import('../mockApi');
 
     let rejectFn: ((error: Error) => void) | null = null;
+
+    // Spy on the abort method
+    mockApi.abort = vi.fn(() => {
+      if (rejectFn) {
+        rejectFn(new Error('Request aborted'));
+      }
+    });
 
     // Override the generate method to simulate abortable request
     mockApi.generate = vi.fn().mockImplementation(() =>
@@ -404,26 +413,15 @@ describe('App', () => {
         rejectFn = reject;
 
         // Long delay to ensure abort button appears
-        const timeout = setTimeout(() => {
+        setTimeout(() => {
           resolve({
-            success: true,
-            data: {
-              id: 'test-id',
-              imageUrl: 'data:image/png;base64,test',
-              prompt: 'test prompt',
-              style: 'Editorial',
-              createdAt: Date.now(),
-            },
+            id: 'test-id',
+            imageUrl: 'data:image/png;base64,test',
+            prompt: 'test prompt',
+            style: 'Editorial',
+            createdAt: new Date().toISOString(),
           });
         }, 5000);
-
-        // Clear timeout if rejected (aborted)
-        (mockApi.abort as ReturnType<typeof vi.fn>).mockImplementationOnce(() => {
-          clearTimeout(timeout);
-          if (rejectFn) {
-            rejectFn(new Error('Request aborted'));
-          }
-        });
       })
     );
 

@@ -110,6 +110,7 @@ function App() {
         }
         
         break;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         attempt++;
         setRetryCount(attempt);
