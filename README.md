@@ -2,6 +2,9 @@
 
 A React-based web application that simulates an AI image generation studio with a clean, accessible interface.
 
+## short video
+
+
 ## Features
 
 - **Image Upload**: Support for PNG/JPG files up to 10MB with automatic client-side downscaling
@@ -46,4 +49,3 @@ npm run dev
 ```
 
 4. Open http://localhost:5173 in your browser to see the app.
-

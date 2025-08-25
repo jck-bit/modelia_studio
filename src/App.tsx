@@ -72,6 +72,15 @@ function App() {
     }
   }, []);
 
+  // Handle image removal
+  const handleRemoveImage = useCallback(() => {
+    setImageDataUrl('');
+    setError('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, []);
+
   // Generate with retry logic
   const generate = useCallback(async () => {
     if (!imageDataUrl || !prompt.trim()) {
@@ -186,7 +195,12 @@ function App() {
 
           {/* Right Column - Preview & History */}
           <div className="space-y-6">
-            <LivePreview imageDataUrl={imageDataUrl} prompt={prompt} style={style} />
+            <LivePreview 
+              imageDataUrl={imageDataUrl} 
+              prompt={prompt} 
+              style={style} 
+              onRemoveImage={handleRemoveImage}
+            />
 
             <History history={history} onRestore={restoreFromHistory} />
           </div>
