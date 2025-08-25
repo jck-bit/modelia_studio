@@ -11,7 +11,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ imageDataUrl, prompt, style }
   return (
     <div className="bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-white/10">
       <h2 className="text-lg font-semibold text-white mb-4">Live Preview</h2>
-      {imageDataUrl && prompt && style ? (
+      {imageDataUrl ? (
         <div className="space-y-4">
           <img
             src={imageDataUrl}
@@ -19,19 +19,26 @@ const LivePreview: React.FC<LivePreviewProps> = ({ imageDataUrl, prompt, style }
             className="w-full rounded-xl shadow-2xl"
           />
           <div className="space-y-3">
-            <div>
-              <h3 className="font-medium text-white/70 text-sm">Prompt:</h3>
-              <p className="text-white">{prompt}</p>
-            </div>
-            <div>
-              <h3 className="font-medium text-white/70 text-sm">Style:</h3>
-              <p className="text-white">{style}</p>
-            </div>
+            {prompt && (
+              <div>
+                <h3 className="font-medium text-white/70 text-sm">Prompt:</h3>
+                <p className="text-white">{prompt}</p>
+              </div>
+            )}
+            {style && (
+              <div>
+                <h3 className="font-medium text-white/70 text-sm">Style:</h3>
+                <p className="text-white">{style}</p>
+              </div>
+            )}
+            {!prompt && !style && (
+              <p className="text-white/50 text-sm">Enter a prompt and select a style to complete the preview</p>
+            )}
           </div>
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-white/50">Upload an image, enter a prompt, and select a style to see the preview</p>
+          <p className="text-white/50">Upload an image to start</p>
         </div>
       )}
     </div>
