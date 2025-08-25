@@ -5,19 +5,34 @@ interface LivePreviewProps {
   imageDataUrl: string;
   prompt: string;
   style: StyleOption;
+  onRemoveImage?: () => void;
 }
 
-const LivePreview: React.FC<LivePreviewProps> = ({ imageDataUrl, prompt, style }) => {
+const LivePreview: React.FC<LivePreviewProps> = ({ imageDataUrl, prompt, style, onRemoveImage }) => {
   return (
     <div className="bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-white/10">
       <h2 className="text-lg font-semibold text-white mb-4">Live Preview</h2>
       {imageDataUrl ? (
         <div className="space-y-4">
-          <img
-            src={imageDataUrl}
-            alt="Preview"
-            className="w-full rounded-xl shadow-2xl"
-          />
+          <div className="relative">
+            <img
+              src={imageDataUrl}
+              alt="Preview"
+              className="w-full rounded-xl shadow-2xl"
+            />
+            {onRemoveImage && (
+              <button
+                onClick={onRemoveImage}
+                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg shadow-lg transition-colors duration-200"
+                aria-label="Remove image"
+                title="Remove image"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
           <div className="space-y-3">
             {prompt && (
               <div>
